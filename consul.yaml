@@ -114,12 +114,7 @@ spec:
               name: consuldns
             - containerPort: 8300
               name: server
-  volumeClaimTemplates:
-    - metadata:
-        name: data
-      spec:
-        accessModes:
-          - ReadWriteOnce
-        resources:
-          requests:
-            storage: 10Gi
+  volumes:
+    - name: mypd
+      persistentVolumeClaim:
+       claimName: myclaim-1
