@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: consul
+  name: consul2
   namespace:
   labels:
     name: consul2
@@ -46,9 +46,9 @@ spec:
 apiVersion: apps/v1beta1
 kind: StatefulSet
 metadata:
-  name: consul
+  name: consul2
 spec:
-  serviceName: consul
+  serviceName: consul2
   replicas: 3
   template:
     metadata:
@@ -57,9 +57,9 @@ spec:
     spec:
       terminationGracePeriodSeconds: 10
       securityContext:
-        fsGroup: 1000
+        runAsNonRoot: true
       containers:
-        - name: consul
+        - name: consul2
           image: "consul:0.9.1"
           env:
             - name: POD_IP
