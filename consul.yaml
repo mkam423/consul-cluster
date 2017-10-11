@@ -85,7 +85,7 @@ spec:
             - "-ui"
             - "-disable-host-node-id"
           volumeMounts:
-            - name: data
+            - name: mypd
               mountPath: /consul/data
           lifecycle:
             preStop:
@@ -113,7 +113,7 @@ spec:
               name: consuldns
             - containerPort: 8300
               name: server
-  volumes:
-    - name: mypd
-      persistentVolumeClaim:
-       claimName: myclaim-1
+      volumes:
+        - name: mypd
+          persistentVolumeClaim:
+           claimName: claim
