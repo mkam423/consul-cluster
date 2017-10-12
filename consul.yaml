@@ -4,7 +4,7 @@ metadata:
   name: consul
   namespace:
   labels:
-    name: consul2
+    name: consul
 spec:
   clusterIP: None
   ports:
@@ -59,7 +59,7 @@ spec:
       securityContext:
       containers:
         - name: consul
-          image: "consul:0.9.1"
+          image: "consul:0.9.3"
           env:
             - name: POD_IP
               valueFrom:
