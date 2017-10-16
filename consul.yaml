@@ -1,3 +1,30 @@
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: data
+  labels:
+    type: local
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 10Gi
+  accessModes:
+    - ReadWriteMany
+  hostPath:
+    path: "/consul/data"
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: data
+spec:
+  storageClassName: manual
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 10Gi
+---
 apiVersion: v1
 kind: Service
 metadata:
@@ -41,7 +68,6 @@ spec:
       targetPort: 8600
   selector:
     app: consul
-
 ---
 apiVersion: apps/v1beta1
 kind: StatefulSet
@@ -85,7 +111,7 @@ spec:
             - "-ui"
             - "-disable-host-node-id"
           volumeMounts:
-            - name: mypd
+            - name: data
               mountPath: /consul/data
           lifecycle:
             preStop:
@@ -114,6 +140,6 @@ spec:
             - containerPort: 8300
               name: server
       volumes:
-        - name: mypd
+        - name: data
           persistentVolumeClaim:
-           claimName: claim
+           claimName: data

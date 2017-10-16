@@ -2,33 +2,34 @@
 
 ## To run consul cluster:
 
-### 1) change to consul-cluster directory
+### 1) Move to consul-cluster directory.
 *git clone repository if it does not exist already*
 
 `git clone https://github.com/mkam423/consul-cluster.git`
 
 `cd consul-cluster`
 
-### 2) Currently the most updated and clean working version of cluster.
-`git checkout cluster_v1`
+### 2) Change to the current most updated and clean working version of cluster.
+`git checkout consolidated_cluster`
 
-### 3) Create persistent volume storage first.
-`kubectl create -f pv.yaml`
 
-### 4) Create claim to bind to the persistent volume.
-`kubectl create -f pvc.yaml`
+### 3) Create the consul cluster.
+Use `kubectl create -f consul.yaml` to create entire cluster.
 
-### 5) Check the claim and volume binds
+
+### 4) Check to see everything is up and running.
+##### Check the claim and volume to ensure binding:
+
 `kubectl get pv` and `kubectl get pvc`
 
-### 6) kubectl create -f consul.yaml
+The status should show up as bound for the claim and persistent volume. The binding for the claim should have the name of the volume that it's bound to within the description. This name should align with that which is in the yaml file.
 
-You should be able to see the service and statefulset for consul create successfully. Double check to see if they are there:
+##### Check the service and statefulset to ensure both both up:
 
-`kubectl get svc | grep consul` and `kubectl get statefulsets | grep consul`
+Use `kubectl get svc | grep consul` and `kubectl get statefulsets | grep consul` to view the successful creations of the service and statefulset.
 
-You should also be able to get the pods and see them come up.
+##### Check the creation of pods designated by the statefulset are running:
 
-`kubectl get pods | grep consul`
+Use `kubectl get pods | grep consul` to see creation of the pods.
 
 3 pods named consul-0, consul-1, and consul-2 should create and end up in a running state.
