@@ -86,6 +86,7 @@ spec:
       containers:
         - name: consul
           image: "consul:0.9.3"
+          imagePullPolicy: Always
           env:
             - name: POD_IP
               valueFrom:
