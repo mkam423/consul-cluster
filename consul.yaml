@@ -30,10 +30,10 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: consul
+  name: svc-consul
   namespace: kube-system
   labels:
-    name: consul
+    name: svc-consul
 spec:
   clusterIP: None
   ports:
@@ -77,7 +77,7 @@ metadata:
   name: consul
   namespace: kube-system
 spec:
-  serviceName: consul
+  serviceName: svc-consul
   replicas: 3
   template:
     metadata:
@@ -104,9 +104,9 @@ spec:
             - "-advertise=$(POD_IP)"
             - "-bind=0.0.0.0"
             - "-bootstrap-expect=3"
-            - "-retry-join=consul-0.consul.$(NAMESPACE).svc.cluster.local"
-            - "-retry-join=consul-1.consul.$(NAMESPACE).svc.cluster.local"
-            - "-retry-join=consul-2.consul.$(NAMESPACE).svc.cluster.local"
+            - "-retry-join=consul-0.svc-consul.$(NAMESPACE).svc.cluster.local"
+            - "-retry-join=consul-1.svc-consul.$(NAMESPACE).svc.cluster.local"
+            - "-retry-join=consul-2.svc-consul.$(NAMESPACE).svc.cluster.local"
             - "-client=0.0.0.0"
             - "-datacenter=dc1"
             - "-data-dir=/consul/data"
