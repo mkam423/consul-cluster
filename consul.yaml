@@ -1,10 +1,37 @@
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: data
+  namespace: kube-system
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 10Gi
+  accessModes:
+    - ReadWriteMany
+  hostPath:
+    path: "/consul/data"
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: data
+  namespace: kube-system
+spec:
+  storageClassName: manual
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 10Gi
+---
 apiVersion: v1
 kind: Service
 metadata:
   name: svc-consul
   namespace: kube-system
   labels:
-    name: consul-svc
+    name: svc-consul
 spec:
   clusterIP: None
   ports:
@@ -41,14 +68,14 @@ spec:
       targetPort: 8600
   selector:
     app: consul
-
 ---
 apiVersion: apps/v1beta1
 kind: StatefulSet
 metadata:
   name: consul
+  namespace: kube-system
 spec:
-  serviceName: consul
+  serviceName: svc-consul
   replicas: 3
   template:
     metadata:
@@ -56,11 +83,10 @@ spec:
         app: consul
     spec:
       terminationGracePeriodSeconds: 10
-      securityContext:
-        fsGroup: 1000
       containers:
         - name: consul
-          image: "consul:0.9.1"
+          image: "consul:0.9.3"
+          imagePullPolicy: Always
           env:
             - name: POD_IP
               valueFrom:
@@ -75,9 +101,9 @@ spec:
             - "-advertise=$(POD_IP)"
             - "-bind=0.0.0.0"
             - "-bootstrap-expect=3"
-            - "-retry-join=consul-0.consul.$(NAMESPACE).svc.cluster.local"
-            - "-retry-join=consul-1.consul.$(NAMESPACE).svc.cluster.local"
-            - "-retry-join=consul-2.consul.$(NAMESPACE).svc.cluster.local"
+            - "-retry-join=consul-0.svc-consul.$(NAMESPACE).svc.cluster.local"
+            - "-retry-join=consul-1.svc-consul.$(NAMESPACE).svc.cluster.local"
+            - "-retry-join=consul-2.svc-consul.$(NAMESPACE).svc.cluster.local"
             - "-client=0.0.0.0"
             - "-datacenter=dc1"
             - "-data-dir=/consul/data"
@@ -114,12 +140,7 @@ spec:
               name: consuldns
             - containerPort: 8300
               name: server
-  volumeClaimTemplates:
-    - metadata:
-        name: data
-      spec:
-        accessModes:
-          - ReadWriteOnce
-        resources:
-          requests:
-            storage: 10Gi
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+           claimName: data
