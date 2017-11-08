@@ -3,6 +3,7 @@ kind: DaemonSet
 metadata:
   labels:
     app: consulregistry
+    addonmanager.kubernetes.io/mode: Reconcile
   name: consulregistry
 spec:
   template:
