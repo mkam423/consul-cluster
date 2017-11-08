@@ -1,0 +1,23 @@
+apiVersion: extensions/v1beta1
+kind: DaemonSet
+metadata:
+  labels:
+    app: consulregistry
+  name: consulregistry
+spec:
+  template:
+    metadata:
+      labels:
+        app: consulregistry
+    spec:
+      containers:
+      - image: 405093580753.dkr.ecr.ap-southeast-2.amazonaws.com/ngp.consulregistry:1.3.1
+        name: consulregistry
+        command: ["consulregistry", "--log", "DEBUG", "event", "-consul", "svc-consul.kube-system.svc.cluster.local:8500"]
+        volumeMounts:
+        - name: varrun
+          mountPath: /var/run/docker.sock
+      volumes:
+      - name: varrun
+        hostPath:
+          path: /var/run/docker.sock
