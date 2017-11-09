@@ -92,7 +92,7 @@ spec:
       terminationGracePeriodSeconds: 10
       containers:
         - name: consul
-          image: "progrium/consul:latest"
+          image: "consul:1.0.0"
           imagePullPolicy: Always
           env:
             - name: POD_IP
