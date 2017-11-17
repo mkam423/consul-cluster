@@ -90,6 +90,8 @@ spec:
         app: consul
     spec:
       terminationGracePeriodSeconds: 10
+      nodeSelector:
+        node-role.kubernetes.io/master: ""
       containers:
         - name: consul
           image: "consul:1.0.0"
