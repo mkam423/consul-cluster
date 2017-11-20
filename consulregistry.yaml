@@ -1,0 +1,24 @@
+apiVersion: extensions/v1beta1
+kind: DaemonSet
+metadata:
+  labels:
+    app: consulregistry
+    addonmanager.kubernetes.io/mode: Reconcile
+  name: consulregistry
+spec:
+  template:
+    metadata:
+      labels:
+        app: consulregistry
+    spec:
+      containers:
+      - image: infobloxcto/ngp.consulregistry:1.2.2
+        name: consulregistry
+        command: ["consulregistry", "--log", "DEBUG", "event", "-consul", "svc-consul.kube-system.svc.cluster.local:8500"]
+        volumeMounts:
+        - name: varrun
+          mountPath: /var/run/docker.sock
+      volumes:
+      - name: varrun
+        hostPath:
+          path: /var/run/docker.sock
